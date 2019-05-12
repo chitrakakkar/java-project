@@ -11,4 +11,9 @@ node('linux'){
     stage('Deploy'){
         sh "aws s3 cp /workspace/java-pipeline/dist/rectangle-${env.BUILD_NUMBER}.jar s3://hw10-jenkinsfile"   
     }
+    stage('Reports'){
+         withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: '', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]){
+            sh 'aws cloudformation describe-stack-resources --stack-name jenkins-stack --region us-east-1' 
+       }
+    }
 }
